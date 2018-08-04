@@ -5,22 +5,40 @@ import rawhttp.core.RawHttpRequest;
 import rawhttp.core.RawHttpResponse;
 import rawhttp.core.client.TcpRawHttpClient;
 
+import javax.script.Bindings;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class RawHttpScraper implements AutoCloseable {
 
     private final RawHttp http = new RawHttp();
     private final TcpRawHttpClient httpClient = new TcpRawHttpClient();
 
-    public void run(InputStream inputStream) throws IOException {
-        RawHttpRequest request = http.parseRequest(inputStream);
-        System.out.println(request);
+    public void run(InputStream requestStream,
+                    String script) throws IOException {
+        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+
+        RawHttpRequest request = http.parseRequest(requestStream);
+
         RawHttpResponse<Void> response = httpClient.send(request).eagerly();
-        System.out.println("-- response --");
-        System.out.println(response);
+
+        Bindings bindings = new SimpleBindings();
+        bindings.put("response", response);
+        bindings.put("UTF8", StandardCharsets.UTF_8);
+
+        try {
+            scriptEngine.eval(script, bindings);
+        } catch (ScriptException e) {
+            error("Error: " + e, 10);
+        }
     }
 
     @Override
@@ -29,32 +47,49 @@ public class RawHttpScraper implements AutoCloseable {
     }
 
     public static void main(String[] args) {
-        if (args.length == 1) {
+        if (args.length == 2) {
             File file = new File(args[0]);
-            runRequestFromFile(file);
-        } else if (args.length == 0) {
-            error("Please provide the file to read a RawHTTP Scrapper script from", 1);
+            File script = new File(args[1]);
+            runRequestFromFile(file, script);
+        } else if (args.length == 0 || args.length == 1) {
+            error("Please provide 2 arguments:\n" +
+                    " * the file to read a RawHTTP Scrapper script from\n" +
+                    " * the JS script to run with the 'response'", 1);
         } else {
-            error("Too many arguments. Only one expected: file to read a RawHTTP Scrapper script from", 2);
+            error("Too many arguments, only 2 expected", 2);
         }
     }
 
-    private static void runRequestFromFile(File file) {
-        if (file.isFile()) {
-            try (RawHttpScraper scraper = new RawHttpScraper();
-                 InputStream is = new FileInputStream(file)) {
-                scraper.run(is);
-            } catch (IOException e) {
-                error("Error: " + e, 4);
-            }
-        } else {
-            error("Not a file: " + file, 3);
+    private static void runRequestFromFile(File request, File script) {
+        if (!request.isFile()) {
+            error("Not a file: " + request, 3);
+        }
+        if (!script.isFile()) {
+            error("Not a file: " + script, 3);
+        }
+        try (RawHttpScraper scraper = new RawHttpScraper();
+             InputStream requestIS = new FileInputStream(request);
+             FileReader scriptReader = new FileReader(script)) {
+            String scriptText = readAsText(scriptReader);
+            scraper.run(requestIS, scriptText);
+        } catch (IOException e) {
+            error("Error: " + e, 4);
         }
     }
 
-    private static void error(String s, int i) {
-        System.err.println(s);
-        System.exit(i);
+    private static String readAsText(FileReader reader) throws IOException {
+        StringBuilder builder = new StringBuilder(512);
+        char[] buffer = new char[256];
+        int byteCount;
+        while ((byteCount = reader.read(buffer)) > 0) {
+            builder.append(buffer, 0, byteCount);
+        }
+        return builder.toString();
+    }
+
+    private static void error(String message, int code) {
+        System.err.println(message);
+        System.exit(code);
     }
 
 }
