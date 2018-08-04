@@ -24,7 +24,7 @@ public class RawHttpScraper implements AutoCloseable {
 
     public void run(InputStream requestStream,
                     String script) throws IOException {
-        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("js");
 
         RawHttpRequest request = http.parseRequest(requestStream);
 
