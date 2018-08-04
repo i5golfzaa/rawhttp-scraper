@@ -1,16 +1,16 @@
 {
   "event": "Java Meetup",
   "date": "2018-08-22",
-  "atendees": [
+  "speakers": [
     {
-      "name": "Joe",
+      "name": "Renato",
       "org": "Curity",
-      "languages": ["Java", "JS", "Groovy"]
+      "topic": "GraalVM"
     },
     {
       "name": "Mary",
       "org": "Oracle",
-      "languages": ["Java", "Haskell", "Kotlin", "Rust"]
+      "topic": "Java Servless"
     }
   ]
 }
