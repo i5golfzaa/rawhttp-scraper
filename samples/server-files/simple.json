@@ -1,0 +1,16 @@
+{
+  "event": "Java Meetup",
+  "date": "2018-08-22",
+  "atendees": [
+    {
+      "name": "Joe",
+      "org": "Curity",
+      "languages": ["Java", "JS", "Groovy"]
+    },
+    {
+      "name": "Mary",
+      "org": "Oracle",
+      "languages": ["Java", "Haskell", "Kotlin", "Rust"]
+    }
+  ]
+}
