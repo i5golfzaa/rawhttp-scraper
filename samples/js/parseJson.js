@@ -1,5 +1,8 @@
-if (response.statusCode !== 200) {
-    throw "Unexpected status code: " + response.statusCode;
+response = Polyglot.import('response');
+UTF8 = Polyglot.import('UTF8');
+
+if (response.getStatusCode() !== 200) {
+    throw "Unexpected status code: " + response.getStatusCode();
 }
 
 var body = response.getBody().orElse(null);

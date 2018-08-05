@@ -1,15 +1,13 @@
 package com.athaydes.rawhttp.scraper;
 
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.PolyglotException;
+import org.graalvm.polyglot.Value;
 import rawhttp.core.RawHttp;
 import rawhttp.core.RawHttpRequest;
 import rawhttp.core.RawHttpResponse;
 import rawhttp.core.client.TcpRawHttpClient;
 
-import javax.script.Bindings;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -24,19 +22,16 @@ public class RawHttpScraper implements AutoCloseable {
 
     public void run(InputStream requestStream,
                     String script) throws IOException {
-        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("js");
-
         RawHttpRequest request = http.parseRequest(requestStream);
 
         RawHttpResponse<Void> response = httpClient.send(request).eagerly();
 
-        Bindings bindings = new SimpleBindings();
-        bindings.put("response", response);
-        bindings.put("UTF8", StandardCharsets.UTF_8);
-
-        try {
-            scriptEngine.eval(script, bindings);
-        } catch (ScriptException e) {
+        try (Context context = Context.create("js")) {
+            Value bindings = context.getPolyglotBindings();
+            bindings.putMember("response", response);
+            bindings.putMember("UTF8", StandardCharsets.UTF_8);
+            context.eval("js", script);
+        } catch (PolyglotException e) {
             error("Error: " + e, 10);
         }
     }
