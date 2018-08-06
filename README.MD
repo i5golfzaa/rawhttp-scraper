@@ -19,12 +19,41 @@ For examples of request files, see the [samples/requests](samples/requests) dire
 
 ## Building
 
+
+Create a runnable jar:
+
 ```
 ./gradlew jar
+```
+
+Create a native executable:
+
+```
+./gradlew native
 ```
 
 ## Testing
 
 ```
 ./gradlew check
+```
+
+## Running
+
+To run the jar:
+
+```
+java -jar build/libs/rawhttp-scraper-<version>.jar <request-file> <js-script>
+```
+
+To run the executable:
+
+```
+./rawhttp-scraper<version> <request-file> <js-script>
+```
+
+Example:
+
+```
+./rawhttp-scraper<version> samples/requests/get-speakers samples/js/parseJson.js
 ```

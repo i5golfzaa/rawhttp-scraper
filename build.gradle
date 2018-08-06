@@ -26,3 +26,10 @@ jar {
         configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
+
+task nativeImage(type: Exec) {
+    dependsOn 'jar'
+    inputs.file jar
+    outputs.file jar.archivePath.name - '.jar'
+    commandLine 'native-image', '--language:js', '-jar', jar.archivePath
+}
