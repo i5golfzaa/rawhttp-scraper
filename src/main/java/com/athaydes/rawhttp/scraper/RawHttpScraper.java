@@ -13,9 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
-public class RawHttpScraper implements AutoCloseable {
+public final class RawHttpScraper implements AutoCloseable {
 
     private final RawHttp http = new RawHttp();
     private final TcpRawHttpClient httpClient = new TcpRawHttpClient();
@@ -27,9 +26,8 @@ public class RawHttpScraper implements AutoCloseable {
         RawHttpResponse<Void> response = httpClient.send(request).eagerly();
 
         try (Context context = Context.create("js")) {
-            Value bindings = context.getPolyglotBindings();
-            bindings.putMember("response", response);
-            bindings.putMember("UTF8", StandardCharsets.UTF_8);
+            Value bindings = context.getBindings("js");
+            bindings.putMember("response", JSUtils.proxyFor(response));
             context.eval("js", script);
         } catch (PolyglotException e) {
             error("Error: " + e, 10);

@@ -1,13 +1,10 @@
-response = Polyglot.import('response');
-UTF8 = Polyglot.import('UTF8');
-
-if (response.getStatusCode() !== 200) {
-    throw "Unexpected status code: " + response.getStatusCode();
+if (response.statusCode !== 200) {
+    throw "Unexpected status code: " + response.statusCode;
 }
 
-var body = response.getBody().orElse(null);
+var body = response.body;
 if (body) {
-    var json = JSON.parse(body.decodeBodyToString(UTF8));
+    var json = JSON.parse(body);
     print("Welcome to the " + json.event);
     print("Number of speakers: " + json.speakers.length);
     print(json.speakers.map(describeSpeaker).join("\n"));
