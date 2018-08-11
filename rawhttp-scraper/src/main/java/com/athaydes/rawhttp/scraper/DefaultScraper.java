@@ -10,7 +10,7 @@ import java.util.Arrays;
 import static com.athaydes.rawhttp.scraper.Errors.IO_ERROR;
 import static com.athaydes.rawhttp.scraper.Errors.error;
 
-public final class DefaultScraper implements Scraper {
+public final class DefaultScraper implements Scraper<Void> {
 
     @Override
     public String getId() {
@@ -18,10 +18,15 @@ public final class DefaultScraper implements Scraper {
     }
 
     @Override
-    public void accept(RawHttpResponse<?> response, String... args) {
+    public Void parseArgs(String... args) {
         if (args.length != 0) {
             System.err.println("Ignoring options: " + Arrays.toString(args));
         }
+        return null;
+    }
+
+    @Override
+    public void accept(RawHttpResponse<?> response, Void ignore) {
         System.out.println(response.getStartLine());
         System.out.println(response.getHeaders());
         response.getBody().ifPresent(bodyReader -> {

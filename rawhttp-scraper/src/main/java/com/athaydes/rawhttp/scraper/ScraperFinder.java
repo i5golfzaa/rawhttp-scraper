@@ -7,9 +7,9 @@ import java.util.ServiceLoader;
 
 final class ScraperFinder {
 
-    Optional<Scraper> findScraper(String scraperId) {
+    Optional<Scraper<?>> findScraper(String scraperId) {
         ServiceLoader<Scraper> scrapers = ServiceLoader.load(Scraper.class);
-        for (Scraper scraper : scrapers) {
+        for (Scraper<?> scraper : scrapers) {
             if (scraper.getId().equalsIgnoreCase(scraperId)) {
                 return Optional.of(scraper);
             }

@@ -2,10 +2,12 @@ package com.athaydes.rawhttp.scraper.spi;
 
 import rawhttp.core.RawHttpResponse;
 
-public interface Scraper {
+public interface Scraper<Options> {
 
     String getId();
 
-    void accept(RawHttpResponse<?> response, String... args);
+    Options parseArgs(String... args) throws InvalidOptionsException;
+
+    void accept(RawHttpResponse<?> response, Options options) throws Exception;
 
 }
