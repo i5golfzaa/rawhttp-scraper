@@ -4,3 +4,10 @@ plugins {
 
 group 'com.athaydes.rawhttp'
 version '1.0-SNAPSHOT'
+
+allprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+}

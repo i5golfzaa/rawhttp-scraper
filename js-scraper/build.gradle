@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group 'com.athaydes.rawhttp'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+dependencies {
+    compile project(':rawhttp-scraper')
+    compileOnly 'org.graalvm:graal-sdk:1.0.0-rc5'
+}
+
+task nativeImage(type: Exec) {
+    dependsOn 'jar'
+    inputs.file jar
+    outputs.file jar.archivePath.name - '.jar'
+    commandLine 'native-image', '--language:js', '-jar', jar.archivePath
+}

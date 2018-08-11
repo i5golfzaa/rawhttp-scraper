@@ -1,4 +1,4 @@
-package com.athaydes.rawhttp.scraper;
+package com.athaydes.rawhttp.scraper.js;
 
 import org.graalvm.polyglot.proxy.ProxyObject;
 import rawhttp.core.RawHttpResponse;

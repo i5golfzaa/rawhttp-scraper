@@ -7,11 +7,6 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
-repositories {
-    mavenLocal()
-    jcenter()
-}
-
 dependencies {
     compile 'com.athaydes.rawhttp:rawhttp-core:2.0-beta3'
 }
@@ -31,7 +26,7 @@ task nativeImage(type: Exec) {
     inputs.file jar
     outputs.file jar.archivePath.name - '.jar'
     commandLine 'native-image',
-            '-H:IncludeResources="META-INF/services/.*"',
+            '-H:IncludeResources=META-INF/services/.*',
             "-H:ReflectionConfigurationFiles=${file('graal-reflect-config.json')}",
             '-jar', jar.archivePath
 }
