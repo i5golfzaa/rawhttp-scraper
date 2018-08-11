@@ -4,31 +4,3 @@ plugins {
 
 group 'com.athaydes.rawhttp'
 version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenLocal()
-    jcenter()
-}
-
-dependencies {
-    compile 'com.athaydes.rawhttp:rawhttp-core:2.0-beta3'
-}
-
-jar {
-    manifest {
-        attributes "Main-Class": "com.athaydes.rawhttp.scraper.Main"
-    }
-
-    from {
-        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
-
-task nativeImage(type: Exec) {
-    dependsOn 'jar'
-    inputs.file jar
-    outputs.file jar.archivePath.name - '.jar'
-    commandLine 'native-image', '-jar', jar.archivePath
-}
