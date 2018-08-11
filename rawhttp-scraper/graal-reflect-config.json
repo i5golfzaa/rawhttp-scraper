@@ -1,0 +1,8 @@
+[
+  {
+    "name" : "com.athaydes.rawhttp.scraper.DefaultScraper",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  }
+]
