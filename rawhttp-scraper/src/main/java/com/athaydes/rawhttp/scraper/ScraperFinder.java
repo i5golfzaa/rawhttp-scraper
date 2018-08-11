@@ -3,14 +3,17 @@ package com.athaydes.rawhttp.scraper;
 import com.athaydes.rawhttp.scraper.spi.Scraper;
 
 import java.util.Optional;
+import java.util.ServiceLoader;
 
 final class ScraperFinder {
 
     Optional<Scraper> findScraper(String scraperId) {
-        if ("default".equalsIgnoreCase(scraperId)) {
-            return Optional.of(new DefaultScraper());
+        ServiceLoader<Scraper> scrapers = ServiceLoader.load(Scraper.class);
+        for (Scraper scraper : scrapers) {
+            if (scraper.getId().equalsIgnoreCase(scraperId)) {
+                return Optional.of(scraper);
+            }
         }
-        // TODO use ServiceLoader to get a scraper
         return Optional.empty();
     }
 
