@@ -14,12 +14,11 @@ repositories {
 
 dependencies {
     compile 'com.athaydes.rawhttp:rawhttp-core:2.0-beta3'
-    compileOnly 'org.graalvm:graal-sdk:1.0.0-rc5'
 }
 
 jar {
     manifest {
-        attributes "Main-Class": "com.athaydes.rawhttp.scraper.RawHttpScraper"
+        attributes "Main-Class": "com.athaydes.rawhttp.scraper.Main"
     }
 
     from {
@@ -31,5 +30,5 @@ task nativeImage(type: Exec) {
     dependsOn 'jar'
     inputs.file jar
     outputs.file jar.archivePath.name - '.jar'
-    commandLine 'native-image', '--language:js', '-jar', jar.archivePath
+    commandLine 'native-image', '-jar', jar.archivePath
 }
