@@ -1,0 +1,8 @@
+[
+  {
+    "name" : "com.athaydes.rawhttp.scraper.kt.KotlinScraper",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  }
+]

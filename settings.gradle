@@ -1,4 +1,4 @@
 rootProject.name = 'rawhttp-scraper-parent'
 
-include 'rawhttp-scraper', 'js-scraper'
+include 'rawhttp-scraper', 'js-scraper', 'kotlin-scraper'
 
