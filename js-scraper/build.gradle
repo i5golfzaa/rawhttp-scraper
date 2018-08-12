@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
 group 'com.athaydes.rawhttp'
@@ -16,20 +17,23 @@ jar {
     manifest {
         attributes "Main-Class": "com.athaydes.rawhttp.scraper.Main"
     }
+}
 
-    from {
-        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+shadowJar {
+    baseName = project.name
+    classifier = null
+    version = null
+    mergeServiceFiles()
 }
 
 task nativeImage(type: Exec) {
-    dependsOn 'jar'
-    inputs.file jar
-    outputs.file jar.archivePath.name - '.jar'
+    dependsOn 'shadowJar'
+    inputs.file shadowJar
+    outputs.file shadowJar.archivePath.name - '.jar'
     commandLine 'native-image',
             '--language:js',
             '-H:IncludeResources=META-INF/services/.*',
             "-H:ReflectionConfigurationFiles=${project(':rawhttp-scraper').file('graal-reflect-config.json')}," +
                     file('graal-reflect-config.json'),
-            '-jar', jar.archivePath
+            '-jar', shadowJar.archivePath
 }
