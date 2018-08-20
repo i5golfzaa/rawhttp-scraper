@@ -9,7 +9,7 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 dependencies {
-    compile 'com.athaydes.rawhttp:rawhttp-core:2.0-beta3'
+    compile 'com.athaydes.rawhttp:rawhttp-core:2.0-beta4'
 }
 
 jar {
